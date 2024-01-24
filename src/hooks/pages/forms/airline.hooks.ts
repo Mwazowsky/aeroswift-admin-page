@@ -93,7 +93,7 @@ export default function useAirlineForm() {
                 formData.append('image', files[0]);
 
                 const response = await axios.post(
-                    `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/upload',
+                    `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/upload`,
                     formData,
                     {
                         headers: {
