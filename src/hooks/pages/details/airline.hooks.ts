@@ -15,7 +15,7 @@ export default function useAirlineDetails() {
   const fetchAirlineData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8060/api/airline/${airline_id}`,
+        `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/${airline_id}`,
         {
           headers: {
             Authorization: localStorage.getItem("token"),

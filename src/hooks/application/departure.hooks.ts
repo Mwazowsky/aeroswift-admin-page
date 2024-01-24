@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { ChangeEvent, MouseEvent, useCallback, useEffect, useState } from 'react';
-import { IBenefit } from '../../content/applications/Benefits/benefit.types';
 import { IApiResponse, IMeta, IParams } from '../../services/types';
 import { useNavigate } from 'react-router-dom';
+import { IDeparture } from 'src/content/applications/Departures/departure.types';
 
-type BenefitData = Array<IBenefit>;
+type DepartureData = Array<IDeparture>;
 
-export default function useBenefits() {
+export default function useDepartures() {
   const navigate = useNavigate();
   const [params, setParams] = useState<IParams>({
     page: 1,
@@ -14,7 +14,7 @@ export default function useBenefits() {
   });
   const [meta, setMeta] = useState<IMeta>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [benefits, setBenefits] = useState<BenefitData>([]);
+  const [departures, setDepartures] = useState<DepartureData>([]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -27,18 +27,18 @@ export default function useBenefits() {
 
   const handleRemove = async (
     e: MouseEvent<HTMLButtonElement>,
-    record: IBenefit
+    record: IDeparture
   ) => {
     e.stopPropagation();
     const confirmed = confirm('Are you sure want to delete?');
     if (confirmed) {
       try {
-        await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/benefit/${record?.benefit_id}`, {
+        await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/departure/${record?.departure_id}`, {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
         });
-        await fetchBenefit();
+        await fetchDeparture();
       } catch (error) {
         console.log('error > ', error);
       }
@@ -47,14 +47,14 @@ export default function useBenefits() {
 
   const handleRemoveMultiple = async (
     e: MouseEvent<HTMLButtonElement>,
-    benefitIds: number[]
+    departureIds: number[]
   ) => {
     e.stopPropagation();
     const confirmed = confirm('Are you sure want to delete?');
     if (confirmed) {
       try {
-        const deletePromises = benefitIds.map(async (benefitId) => {
-          await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/benefit/${benefitId}`, {
+        const deletePromises = departureIds.map(async (departureId) => {
+          await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/departure/${departureId}`, {
             headers: {
               Authorization: localStorage.getItem('token'),
             },
@@ -62,23 +62,23 @@ export default function useBenefits() {
         });
         console.log(deletePromises);
         await Promise.all(deletePromises);
-        await fetchBenefit(); // Assuming fetchCars fetches the updated list
+        await fetchDeparture(); // Assuming fetchCars fetches the updated list
       } catch (error) {
         console.log('error > ', error);
       }
     }
   };
 
-  const handleEdit = (e: MouseEvent<HTMLButtonElement>, record: IBenefit) => {
+  const handleEdit = (e: MouseEvent<HTMLButtonElement>, record: IDeparture) => {
     e.stopPropagation();
-    navigate(`/management/benefits/update/${record.benefit_id}`);
+    navigate(`/management/departures/update/${record.departure_id}`);
   };
 
-  const fetchBenefit = useCallback(async () => {
+  const fetchDeparture = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get<IApiResponse<BenefitData>>(
-        `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/benefit/`,
+      const response = await axios.get<IApiResponse<DepartureData>>(
+        `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/departure/`,
         {
           params,
           headers: {
@@ -86,21 +86,22 @@ export default function useBenefits() {
           },
         }
       );
-      setBenefits(response?.data.data);
+      // console.log("Response hook >>> ", response);
+      setDepartures(response?.data.data);
       setMeta(response.data.meta);
     } catch (error) {
       console.log('error > ', error);
     } finally {
       setLoading(false);
     }
-  }, [params]);
+  }, [params]); // Include only the necessary dependencies here
 
   useEffect(() => {
-    fetchBenefit();
-  }, [fetchBenefit]);
+    fetchDeparture();
+  }, [fetchDeparture]);
 
   return {
-    benefits,
+    departures,
     params,
     loading,
     meta,

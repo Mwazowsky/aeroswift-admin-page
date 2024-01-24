@@ -17,7 +17,7 @@ export default function useBenefitForm() {
     const fetchBenefitData = useCallback(async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8060/api/benefit/${benefit_id}`,
+                `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/benefit/${benefit_id}`,
                 {
                     headers: {
                         Authorization: localStorage.getItem("token"),
@@ -41,7 +41,7 @@ export default function useBenefitForm() {
 
             console.log("Payload >>>", payload);
 
-            await axios.post('http://localhost:8060/api/benefit/', payload, {
+            await axios.post(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/benefit/`, payload, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -65,7 +65,7 @@ export default function useBenefitForm() {
             };
             console.log("Payload >>>", payload);
 
-            await axios.put(`http://localhost:8060/api/benefit/${benefit_id}`, payload, {
+            await axios.put(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/benefit/${benefit_id}`, payload, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },

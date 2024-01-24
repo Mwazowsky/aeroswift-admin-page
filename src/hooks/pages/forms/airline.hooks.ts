@@ -20,7 +20,7 @@ export default function useAirlineForm() {
     const fetchAirlineData = useCallback(async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8060/api/airline/${airline_id}`,
+                `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/${airline_id}`,
                 {
                     headers: {
                         Authorization: localStorage.getItem("token"),
@@ -45,7 +45,7 @@ export default function useAirlineForm() {
 
             console.log("Payload >>>", payload);
 
-            await axios.post('http://localhost:8060/api/airline/', payload, {
+            await axios.post(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/`, payload, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -70,7 +70,7 @@ export default function useAirlineForm() {
             };
             console.log("Payload >>>", payload);
 
-            await axios.put(`http://localhost:8060/api/airline/${airline_id}`, payload, {
+            await axios.put(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/${airline_id}`, payload, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
@@ -93,7 +93,7 @@ export default function useAirlineForm() {
                 formData.append('image', files[0]);
 
                 const response = await axios.post(
-                    'http://localhost:8060/api/airline/upload',
+                    `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/upload',
                     formData,
                     {
                         headers: {

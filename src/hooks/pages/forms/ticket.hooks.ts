@@ -1,60 +1,55 @@
 import axios from 'axios';
 import { FormEvent, useCallback, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IFlight } from 'src/content/applications/Flights/flight.types';
+import { ITicket } from 'src/content/applications/Tickets/ticket.types';
 
-export default function useFlightForm() {
-    const { flight_id } = useParams();
+export default function useTicketForm() {
+    const { ticket_id } = useParams();
     const navigate = useNavigate();
-    const [formValues, setFormValues] = useState<IFlight>({
+    const [formValues, setFormValues] = useState<ITicket>({
+        ticket_id: 0,
         flight_id: 0,
-        departure_id: 0,
-        arrival_id: 0,
-        airline_id: 0,
-        transit: 0,
-        first_seat: 0,
-        business_seat: 0,
-        economy_seat: 0,
-        flight_status: "",
-        flight_number: "",
-        iata: "",
+        ticket_type: "",
+        ticket_amount: 0,
+        fare_amount: "",
+        valid_until: "",
     });
     const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
 
-    const fetchFlightData = useCallback(async () => {
+    const fetchTicketData = useCallback(async () => {
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/${flight_id}`,
+                `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/ticket/${ticket_id}`,
                 {
                     headers: {
                         Authorization: localStorage.getItem("token"),
                     },
                 }
             );
-            const flightData = response.data.data[0];
-            console.log(flightData);
-            setFormValues(flightData);
+            const ticketData = response.data.data[0];
+            console.log(ticketData);
+            setFormValues(ticketData);
         } catch (error) {
             console.log("error > ", error);
         }
-    }, [flight_id]);
+    }, [ticket_id]);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             setLoadingSubmit(true);
 
-            const { flight_id, ...payload } = formValues;
+            const { ticket_id, ...payload } = formValues;
 
             console.log("Payload >>>", payload);
 
-            await axios.post(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/`, payload, {
+            await axios.post(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/ticket/`, payload, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
             });
 
-            navigate("/management/flights");
+            navigate("/management/tickets");
         } catch (error) {
             console.log('error > ', error);
         } finally {
@@ -72,12 +67,12 @@ export default function useFlightForm() {
             };
             console.log("Payload >>>", payload);
 
-            await axios.put(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/${flight_id}`, payload, {
+            await axios.put(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/ticket/${ticket_id}`, payload, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
             });
-            navigate("/management/flights");
+            navigate("/management/tickets");
         } catch (error) {
             console.log('error > ', error);
         } finally {
@@ -88,7 +83,7 @@ export default function useFlightForm() {
     return {
         formValues,
         loadingSubmit,
-        fetchFlightData,
+        fetchTicketData,
         handleSubmit,
         handleUpdateSubmit,
         setFormValues

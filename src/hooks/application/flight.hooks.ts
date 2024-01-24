@@ -70,7 +70,7 @@ export default function useFlights() {
     const confirmed = confirm('Are you sure want to delete?');
     if (confirmed) {
       try {
-        await axios.delete(`http://localhost:8060/api/flight/${record?.flight_id}`, {
+        await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/${record?.flight_id}`, {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
@@ -91,7 +91,7 @@ export default function useFlights() {
     if (confirmed) {
       try {
         const deletePromises = flightIds.map(async (flightId) => {
-          await axios.delete(`http://localhost:8060/api/flight/${flightId}`, {
+          await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/${flightId}`, {
             headers: {
               Authorization: localStorage.getItem('token'),
             },
@@ -115,7 +115,7 @@ export default function useFlights() {
     try {
       setLoading(true);
       const response = await axios.get<IApiResponse<FlightData>>(
-        'http://localhost:8060/api/flight/',
+        `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/`,
         {
           params,
           headers: {

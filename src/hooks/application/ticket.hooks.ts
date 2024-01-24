@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { ChangeEvent, MouseEvent, useCallback, useEffect, useState } from 'react';
-import { IAirline } from '../../content/applications/Airlines/airline.types';
 import { IApiResponse, IMeta, IParams } from '../../services/types';
 import { useNavigate } from 'react-router-dom';
 import { Filters } from "../../types/productsTable";
 import { SelectChangeEvent } from '@mui/material';
+import { ITicket } from '../../content/applications/Tickets/ticket.types';
 
 const statusOptions = [
     {
@@ -13,20 +13,20 @@ const statusOptions = [
         value: "all",
     },
     {
-        id: "available",
-        name: "Available",
-        value: "available",
+        id: "scheduled",
+        name: "Scheduled",
+        value: "scheduled",
     },
     {
-        id: "unavailable",
-        name: "Unavailable",
-        value: "unavailable",
+        id: "in-flight",
+        name: "In-Flight",
+        value: "in-flight",
     },
 ];
 
-type AirlineData = Array<IAirline>;
+type TicketData = Array<ITicket>;
 
-export default function useAirlines() {
+export default function useTickets() {
   const navigate = useNavigate();
   const [params, setParams] = useState<IParams>({
     page: 1,
@@ -34,7 +34,7 @@ export default function useAirlines() {
   });
   const [meta, setMeta] = useState<IMeta>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [airlines, setAirlines] = useState<AirlineData>([]);
+  const [tickets, setTickets] = useState<TicketData>([]);
   const [filters, setFilters] = useState<Filters>({ status: "all" });
 
   const handleStatusChange = (e: SelectChangeEvent<string>): void => {
@@ -64,18 +64,18 @@ export default function useAirlines() {
 
   const handleRemove = async (
     e: MouseEvent<HTMLButtonElement>,
-    record: IAirline
+    record: ITicket
   ) => {
     e.stopPropagation();
     const confirmed = confirm('Are you sure want to delete?');
     if (confirmed) {
       try {
-        await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/${record?.airline_id}`, {
+        await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/ticket/${record?.ticket_id}`, {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
         });
-        await fetchAirline();
+        await fetchTicket();
       } catch (error) {
         console.log('error > ', error);
       }
@@ -84,14 +84,14 @@ export default function useAirlines() {
 
   const handleRemoveMultiple = async (
     e: MouseEvent<HTMLButtonElement>,
-    carIds: number[]
+    ticketIds: number[]
   ) => {
     e.stopPropagation();
     const confirmed = confirm('Are you sure want to delete?');
     if (confirmed) {
       try {
-        const deletePromises = carIds.map(async (carId) => {
-          await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/${carId}`, {
+        const deletePromises = ticketIds.map(async (ticketId) => {
+          await axios.delete(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/ticket/${ticketId}`, {
             headers: {
               Authorization: localStorage.getItem('token'),
             },
@@ -99,23 +99,23 @@ export default function useAirlines() {
         });
         console.log(deletePromises);
         await Promise.all(deletePromises);
-        await fetchAirline(); // Assuming fetchCars fetches the updated list
+        await fetchTicket(); // Assuming fetchCars fetches the updated list
       } catch (error) {
         console.log('error > ', error);
       }
     }
   };
 
-  const handleEdit = (e: MouseEvent<HTMLButtonElement>, record: IAirline) => {
+  const handleEdit = (e: MouseEvent<HTMLButtonElement>, record: ITicket) => {
     e.stopPropagation();
-    navigate(`/management/airlines/update/${record.airline_id}`);
+    navigate(`/management/tickets/update/${record.ticket_id}`);
   };
 
-  const fetchAirline = useCallback(async () => {
+  const fetchTicket = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get<IApiResponse<AirlineData>>(
-        `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/airline/`,
+      const response = await axios.get<IApiResponse<TicketData>>(
+        `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/ticket/`,
         {
           params,
           headers: {
@@ -124,7 +124,7 @@ export default function useAirlines() {
         }
       );
       // console.log("Response hook >>> ", response);
-      setAirlines(response?.data.data);
+      setTickets(response?.data.data);
       setMeta(response.data.meta);
     } catch (error) {
       console.log('error > ', error);
@@ -134,11 +134,11 @@ export default function useAirlines() {
   }, [params]); // Include only the necessary dependencies here
 
   useEffect(() => {
-    fetchAirline();
-  }, [fetchAirline]);
+    fetchTicket();
+  }, [fetchTicket]);
 
   return {
-    airlines,
+    tickets,
     filters, 
     params,
     loading,

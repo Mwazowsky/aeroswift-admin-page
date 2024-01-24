@@ -22,7 +22,7 @@ export default function useFlightDetails() {
   const fetchFlightData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8060/api/flight/${flight_id}`,
+        `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/${flight_id}`,
         {
           headers: {
             Authorization: localStorage.getItem("token"),

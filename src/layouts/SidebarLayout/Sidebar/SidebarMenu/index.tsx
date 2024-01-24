@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
 import {
   ListSubheader,
@@ -7,12 +7,12 @@ import {
   List,
   styled,
   Button,
-  ListItem
-} from '@mui/material';
-import { NavLink as RouterLink } from 'react-router-dom';
-import { SidebarContext } from '../../../../contexts/SidebarContext';
+  ListItem,
+} from "@mui/material";
+import { NavLink as RouterLink } from "react-router-dom";
+import { SidebarContext } from "../../../../contexts/SidebarContext";
 
-import TableChartTwoToneIcon from '@mui/icons-material/TableChartTwoTone';
+import TableChartTwoToneIcon from "@mui/icons-material/TableChartTwoTone";
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -65,7 +65,7 @@ const SubMenuWrapper = styled(Box)(
 
           .MuiButton-startIcon,
           .MuiButton-endIcon {
-            transition: ${theme.transitions.create(['color'])};
+            transition: ${theme.transitions.create(["color"])};
 
             .MuiSvgIcon-root {
               font-size: inherit;
@@ -129,8 +129,8 @@ const SubMenuWrapper = styled(Box)(
                 background: ${theme.colors.alpha.trueWhite[100]};
                 opacity: 0;
                 transition: ${theme.transitions.create([
-                  'transform',
-                  'opacity'
+                  "transform",
+                  "opacity",
                 ])};
                 width: 6px;
                 height: 6px;
@@ -199,10 +199,40 @@ function SidebarMenu() {
                 <Button
                   component={RouterLink}
                   onClick={closeSidebar}
+                  to="/management/tickets"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Tickets
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  component={RouterLink}
+                  onClick={closeSidebar}
                   to="/management/airlines"
                   startIcon={<TableChartTwoToneIcon />}
                 >
                   Airlines
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/management/departures"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Departures
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/management/arrivals"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Arrivals
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -237,6 +267,49 @@ function SidebarMenu() {
               </ListItem>
             </List>
           </SubMenuWrapper>
+        </List>
+        <List
+            component="div"
+            subheader={
+              <ListSubheader component="div" disableSticky>
+                User Management
+              </ListSubheader>
+            }
+          >
+            <SubMenuWrapper>
+              <List component="div">
+                <ListItem component="div">
+                  <Button
+                    component={RouterLink}
+                    onClick={closeSidebar}
+                    to="/user-management/users"
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Users
+                  </Button>
+                </ListItem>
+                <ListItem component="div">
+                  <Button
+                    component={RouterLink}
+                    onClick={closeSidebar}
+                    to="/user-management/travel-docs"
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Travel Documnets
+                  </Button>
+                </ListItem>
+                <ListItem component="div">
+                  <Button
+                    component={RouterLink}
+                    onClick={closeSidebar}
+                    to="/user-management/passengers"
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Passengers Details
+                  </Button>
+                </ListItem>
+              </List>
+            </SubMenuWrapper>
         </List>
       </MenuWrapper>
     </>

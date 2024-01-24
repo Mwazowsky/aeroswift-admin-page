@@ -15,7 +15,7 @@ export default function useBenefitDetails() {
   const fetchBenefitData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8060/api/benefit/${benefit_id}`,
+        `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/benefit/${benefit_id}`,
         {
           headers: {
             Authorization: localStorage.getItem("token"),

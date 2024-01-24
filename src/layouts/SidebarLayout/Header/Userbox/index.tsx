@@ -59,21 +59,18 @@ const UserBoxDescription = styled(Typography)(
 );
 
 export interface IUser {
-  user_id: number;
-  first_name: string;
-  last_name: string;
+  user_id: string; 
+  fullName: string; 
   email: string;
   password: string;
-  role: string;
+  roleName: string;
+  imageUrl: string;
+  dob: number; 
+  createdAt: number; 
 }
 
 function HeaderUserbox() {
   const [userData, setUserData] = useState<IUser>();
-  const user = {
-    name: "Catherine Pike",
-    avatar: "/static/images/avatars/1.jpg",
-    jobtitle: "Project Manager",
-  };
 
   const ref = useRef(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -103,7 +100,7 @@ function HeaderUserbox() {
         }
 
         const response = await axios.get(
-          'https://binar-rental-backend-app.fly.dev/api/user/user-data',
+          "https://backend-java-production-ece2.up.railway.app/api/v1/user/detail-user",
           {
             headers: {
               Authorization: token,
@@ -111,7 +108,8 @@ function HeaderUserbox() {
           }
         );
 
-        const userData: IUser = response.data?.user;
+        const userData: IUser = response.data;
+        console.log(userData);
         setUserData(userData);
       } catch (error) {
         console.log('Error fetching user data:', error);
@@ -121,17 +119,15 @@ function HeaderUserbox() {
     fetchUserData();
   }, []);
 
-  console.log("userData >>>", userData);
-
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        <Avatar variant="rounded" alt={userData?.fullName} src={userData?.imageUrl} />
         <Hidden mdDown>
           <UserBoxText>
-            <UserBoxLabel variant="body1">{`${userData?.first_name} ${userData?.last_name}`}</UserBoxLabel>
+            <UserBoxLabel variant="body1">{`${userData?.fullName}`}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {userData?.role}
+              {userData?.roleName}
             </UserBoxDescription>
           </UserBoxText>
         </Hidden>
@@ -153,11 +149,11 @@ function HeaderUserbox() {
         }}
       >
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={userData?.first_name} src={user.avatar} />
+          <Avatar variant="rounded" alt={userData?.fullName} src={userData?.imageUrl} />
           <UserBoxText>
             <UserBoxLabel variant="body1">{userData?.email}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {userData?.role}
+              {userData?.roleName}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

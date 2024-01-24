@@ -9,10 +9,25 @@ import Loader from "./Loader";
 const Login = Loader(lazy(() => import("src/content/pages/Login")));
 const Register = Loader(lazy(() => import("src/content/pages/Register")));
 
+const Tickets = Loader(lazy(() => import("src/content/applications/Tickets")));
+const TicketCreateForm = Loader(lazy(() => import("src/content/pages/Tickets/Create/index")));
+const TicketUpdateForm = Loader(lazy(() => import("src/content/pages/Tickets/Update/index")));
+const TicketDetails = Loader(lazy(() => import("src/content/pages/Tickets/Details")));
+
 const Airlines = Loader(lazy(() => import("src/content/applications/Airlines")));
 const AirlineCreateForm = Loader(lazy(() => import("src/content/pages/Airlines/Create/index")));
 const AirlineUpdateForm = Loader(lazy(() => import("src/content/pages/Airlines/Update/index")));
 const AirlineDetails = Loader(lazy(() => import("src/content/pages/Airlines/Details")));
+
+const Departures = Loader(lazy(() => import("src/content/applications/Departures")));
+const DepartureCreateForm = Loader(lazy(() => import("src/content/pages/Departures/Create/index")));
+const DepartureUpdateForm = Loader(lazy(() => import("src/content/pages/Departures/Update/index")));
+const DepartureDetails = Loader(lazy(() => import("src/content/pages/Departures/Details")));
+
+const Arrivals = Loader(lazy(() => import("src/content/applications/Arrivals")));
+const ArrivalCreateForm = Loader(lazy(() => import("src/content/pages/Arrivals/Create/index")));
+const ArrivalUpdateForm = Loader(lazy(() => import("src/content/pages/Arrivals/Update/index")));
+const ArrivalDetails = Loader(lazy(() => import("src/content/pages/Arrivals/Details")));
 
 const Flights = Loader(lazy(() => import("src/content/applications/Flights")));
 const FlightCreateForm = Loader(lazy(() => import("src/content/pages/Flights/Create/index")));
@@ -42,8 +57,20 @@ const routes: RouteObject[] = [
         element: <Navigate to="airlines" replace />,
       },
       {
+        path: "tickets",
+        element: <Tickets />
+      },
+      {
         path: "airlines",
         element: <Airlines />
+      },
+      {
+        path: "departures",
+        element: <Departures />
+      },
+      {
+        path: "arrivals",
+        element: <Arrivals />
       },
       {
         path: "flights",
@@ -56,6 +83,28 @@ const routes: RouteObject[] = [
     ],
   },
 
+  {
+    path: "/management/tickets",
+    element: (
+      <PrivateProvider>
+        <SidebarLayout />
+      </PrivateProvider>
+    ),
+    children: [
+      {
+        path: "create",
+        element: <TicketCreateForm />,
+      },
+      {
+        path: "update/:ticket_id",
+        element: <TicketUpdateForm />,
+      },
+      {
+        path: "details/:ticket_id",
+        element: <TicketDetails />,
+      },
+    ],
+  },
   {
     path: "/management/airlines",
     element: (
@@ -75,6 +124,50 @@ const routes: RouteObject[] = [
       {
         path: "details/:airline_id",
         element: <AirlineDetails />,
+      },
+    ],
+  },
+  {
+    path: "/management/departures",
+    element: (
+      <PrivateProvider>
+        <SidebarLayout />
+      </PrivateProvider>
+    ),
+    children: [
+      {
+        path: "create",
+        element: <DepartureCreateForm />,
+      },
+      {
+        path: "update/:departure_id",
+        element: <DepartureUpdateForm />,
+      },
+      {
+        path: "details/:departure_id",
+        element: <DepartureDetails />,
+      },
+    ],
+  },
+  {
+    path: "/management/arrivals",
+    element: (
+      <PrivateProvider>
+        <SidebarLayout />
+      </PrivateProvider>
+    ),
+    children: [
+      {
+        path: "create",
+        element: <ArrivalCreateForm />,
+      },
+      {
+        path: "update/:arrival_id",
+        element: <ArrivalUpdateForm />,
+      },
+      {
+        path: "details/:arrival_id",
+        element: <ArrivalDetails />,
       },
     ],
   },

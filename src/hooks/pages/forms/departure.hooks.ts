@@ -1,60 +1,52 @@
 import axios from 'axios';
 import { FormEvent, useCallback, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IFlight } from 'src/content/applications/Flights/flight.types';
+import { IDeparture } from 'src/content/applications/Departures/departure.types';
 
-export default function useFlightForm() {
-    const { flight_id } = useParams();
+export default function useDepartureForm() {
+    const { departure_id } = useParams();
     const navigate = useNavigate();
-    const [formValues, setFormValues] = useState<IFlight>({
-        flight_id: 0,
+    const [formValues, setFormValues] = useState<IDeparture>({
         departure_id: 0,
-        arrival_id: 0,
-        airline_id: 0,
-        transit: 0,
-        first_seat: 0,
-        business_seat: 0,
-        economy_seat: 0,
-        flight_status: "",
-        flight_number: "",
-        iata: "",
+        airport_id: 0,
+        terminal: "",
+        scheduled_time: "",
     });
     const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
 
-    const fetchFlightData = useCallback(async () => {
+    const fetchDepartureData = useCallback(async () => {
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/${flight_id}`,
+                `${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/departure/${departure_id}`,
                 {
                     headers: {
                         Authorization: localStorage.getItem("token"),
                     },
                 }
             );
-            const flightData = response.data.data[0];
-            console.log(flightData);
-            setFormValues(flightData);
+            const departureData = response.data.data;
+            setFormValues(departureData);
         } catch (error) {
             console.log("error > ", error);
         }
-    }, [flight_id]);
+    }, [departure_id]);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             setLoadingSubmit(true);
 
-            const { flight_id, ...payload } = formValues;
+            const { departure_id, ...payload } = formValues;
 
             console.log("Payload >>>", payload);
 
-            await axios.post(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/`, payload, {
+            await axios.post(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/departure/`, payload, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
             });
 
-            navigate("/management/flights");
+            navigate("/management/departures");
         } catch (error) {
             console.log('error > ', error);
         } finally {
@@ -67,17 +59,15 @@ export default function useFlightForm() {
         e.preventDefault();
         try {
             setLoadingSubmit(true);
-            const payload = {
-                ...formValues
-            };
+            const payload = { ...formValues };
             console.log("Payload >>>", payload);
 
-            await axios.put(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/flight/${flight_id}`, payload, {
+            await axios.put(`${import.meta.env.VITE_NODE_BACKEND_BASE_URL}/api/departure/${departure_id}`, payload, {
                 headers: {
                     Authorization: localStorage.getItem('token'),
                 },
             });
-            navigate("/management/flights");
+            navigate("/management/departures");
         } catch (error) {
             console.log('error > ', error);
         } finally {
@@ -88,7 +78,7 @@ export default function useFlightForm() {
     return {
         formValues,
         loadingSubmit,
-        fetchFlightData,
+        fetchDepartureData,
         handleSubmit,
         handleUpdateSubmit,
         setFormValues
